@@ -1,5 +1,7 @@
 # step_6_adc_dma_data_acquisition
-Building from step 5, adding ADC + DMA on top of what we've built; exercises a different muscle than UART while reusing our scheduler, console, and discipline
+Building from step 5, adding ADC + DMA (Analog-to-Digital Converter Direct Memory Access) on top of what we've built; exercises a different muscle than UART while reusing our scheduler, console, and discipline.
+
+ADC DMA is a powerful technique in microcontrollers that lets the ADC automatically transfer its converted analog data directly into memory (RAM) without constantly involving the CPU, freeing the processor to handle other tasks while efficiently collecting continuous, high-speed sensor data. It's crucial for performance in applications needing fast, uninterrupted data streams, like monitoring multiple sensors. 
 
 ### Using these versions:
 * `STM32CubeIDE` : `1.18.1`
