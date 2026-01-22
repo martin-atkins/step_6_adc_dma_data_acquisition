@@ -18,12 +18,6 @@ Building from step 5, adding ADC + DMA on top of what we've built; exercises a d
 * Buffer management under load
 * Time-based reasoning (sampling rate vs processing rate)
 
-**This is exactly the path used in:**
-* sensor systems
-* motor control
-* medical instrumentation
-* data loggers
-
 ### Goal
 * **Sample an analog signal continuously using ADC + DMA, and expose it via the console**
 
@@ -77,7 +71,7 @@ avg: 2049
 
 Now the console becomes a debug instrument
 
-### How this fits your existing architecture
+### How this fits our existing architecture
 
 Existing       | Reused for ADC
 ---------------|----------------------------
