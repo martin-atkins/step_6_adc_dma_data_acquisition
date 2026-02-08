@@ -124,3 +124,80 @@ A temperature sensor forces us to think about **units, scaling, noise, and sanit
 * rate-of-change detection
 * calibration offsets
 
+I'm gonig to be using an NTC thermistor
+
+## Proposed build plan (with temperature sensor)
+
+### Stage 1 — Raw acquisition
+
+* ADC + DMA circular buffer
+* Sample at 10–50 Hz (temperature is slow)
+* Capture raw ADC counts only
+
+Console:
+
+```
+adc raw
+```
+
+Example:
+
+```
+last=2049 min=2041 max=2056
+```
+
+### Stage 2 — Voltage conversion
+
+Add:
+
+``` c
+uint32_t adc_to_voltage(uint16_t raw)
+```
+
+Console:
+
+```
+adc volts
+```
+
+Output:
+
+```
+> adc volts
+ADC volts=756 mV
+ok
+```
+
+### Stage 3 — Temperature conversion
+
+Console:
+
+```
+adc temp
+```
+
+Output:
+
+```
+> adc temp
+ADC=941  Rntc=2984 ohm  Temp=18.30 C
+ok
+```
+
+### Stage 4 — Status & health
+
+Add:
+
+```
+adc status
+```
+
+Includes:
+
+* running / stopped
+* sample rate
+* buffer overruns (should stay zero)
+* sensor sanity range
+
+* 
+
