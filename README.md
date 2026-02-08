@@ -54,21 +54,31 @@ No printing here
 Add commands:
 
 ```
-adc status
 adc start
 adc stop
-adc rate
+adc latest
+adc avg
+adc temp
 ```
 
 Example output:
 
 ```
-adc: running
-rate: 1000 Hz
-last: 2048
-min: 2031
-max: 2072
-avg: 2049
+> adc stop
+adc stopped
+ok
+> adc start
+adc started
+ok
+> adc latest
+ADC latest=942  [759 mV]
+ok
+> adc avg
+ADC avg=927  [747 mV]
+ok
+> adc temp
+ADC=898  Rntc=2809 ohm  Temp=19.60 C
+ok
 ```
 
 Now the console becomes a debug instrument
@@ -80,7 +90,7 @@ Existing       | Reused for ADC
 DMA RX logic   | DMA ADC buffer tracking
 Scheduler      | ADC processing task
 Console        | Configuration & observability
-State machines | ADC run/stop control
+State machines | ADC start/stop control
 
 ## STM32CubeMX (.ioc) changes (high-level)
 
