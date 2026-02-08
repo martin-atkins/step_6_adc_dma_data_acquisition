@@ -198,6 +198,3 @@ Includes:
 * sample rate
 * buffer overruns (should stay zero)
 * sensor sanity range
-
-* 
-
