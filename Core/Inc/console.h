@@ -15,6 +15,8 @@ extern "C" {
 void console_init(void);
 void task_console(void);
 
+void console_printf(const char *fmt, ...);
+
 #ifdef __cplusplus
 }
 #endif

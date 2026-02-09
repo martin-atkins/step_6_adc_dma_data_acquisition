@@ -1,8 +1,11 @@
+#include "adc_app.h"
 #include "console.h"
 #include "usart.h"
 #include "dma.h"
+#include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 #define UART_RX_DMA_BUF_SIZE 128
 #define LINE_BUF_SIZE 64
@@ -19,13 +22,15 @@ static void cmd_led(int argc, char *argv[]);
 static void cmd_help(int argc, char *argv[]);
 static void cmd_uptime(int argc, char *argv[]);
 static void cmd_status(int argc, char *argv[]);
+static void cmd_adc(int argc, char **argv);
 
 static const console_cmd_t cmd_table[] =
 {
-	{ "help",   cmd_help,   "show this help" },
-	{ "status", cmd_status, "system status" },
-	{ "uptime", cmd_uptime, "system uptime" },
-	{ "led",    cmd_led,    "led off|slow|fast" },
+	{ "help",   cmd_help, "   - show this help" },
+	{ "status", cmd_status, " - system status" },
+	{ "uptime", cmd_uptime, " - system uptime" },
+	{ "led",    cmd_led, "    - led off|slow|fast" },
+	{ "adc",    cmd_adc, "    - adc start|stop|volts|latest|avg|temp" },
 };
 
 #define CMD_COUNT (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -44,10 +49,21 @@ static void console_write(const char *s) {
 	HAL_MAX_DELAY);
 }
 
+void console_printf(const char *fmt, ...)
+{
+    char buf[128];   // keep this reasonable
+    va_list ap;
+
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+
+    console_write(buf);
+}
+
 static void console_prompt(void) {
 	HAL_UART_Transmit(&huart2, (uint8_t*) "> ", 2,
 	HAL_MAX_DELAY);
-	console_write("\r\n");
 }
 
 static void console_handle_command(char *cmd) {
@@ -80,6 +96,7 @@ void console_init(void) {
 
 	__HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
 
+	console_write("ok\r\n");
 	console_prompt();
 }
 
@@ -165,11 +182,78 @@ static void cmd_status(int argc, char *argv[])
     );
 
     console_write(buf);
+
+	console_write("ok\r\n");
+	console_prompt();
+}
+
+static void cmd_adc(int argc, char **argv)
+{
+	if (argc < 2) {
+        console_write("usage: adc start|stop|volts|latest|avg|temp\r\n");
+        console_prompt();
+		return;
+	}
+
+    if (!strcmp(argv[1], "start"))
+    {
+        adc_app_start();
+        console_write("adc started\r\n");
+    }
+    else if (!strcmp(argv[1], "stop"))
+    {
+        adc_app_stop();
+        console_write("adc stopped\r\n");
+    }
+    else if (!strcmp(argv[1], "volts"))
+    {
+        uint16_t raw = adc_app_average();
+        uint32_t mv = adc_to_voltage(raw);
+
+		console_printf("ADC volts=%lu mV\r\n", mv);
+    }
+    else if (!strcmp(argv[1], "latest"))
+    {
+		uint16_t raw = adc_read_avg(16);
+		uint32_t mv = (raw * 3300UL) / 4095;
+
+		console_printf("ADC latest=%u (raw) [%lu mV]\r\n", raw, mv);
+    }
+    else if (!strcmp(argv[1], "avg"))
+    {
+        uint16_t raw = adc_app_average();
+        uint32_t mv = adc_to_voltage(raw);
+
+		console_printf("ADC avg=%u  [%lu mV]\r\n", raw, mv);
+    }
+    else if (!strcmp(argv[1], "temp"))
+    {
+		uint16_t raw = adc_read_avg(16);
+
+        float temp_c = thermistor_beta_to_celsius(raw);
+
+        if (!isfinite(temp_c)) {
+            console_printf("TEMP ERROR (NaN/Inf)\r\n");
+            return;
+        }
+
+        float r_ntc = adc_to_ntc_resistance(raw, 10000.0f);
+        console_printf("ADC=%u  Rntc=%.0f ohm  Temp=%.2f C\r\n",
+                       raw, r_ntc, temp_c);
+    }
+    else
+    {
+        console_write("unknown adc command\r\n");
+    }
+
+	console_write("ok\r\n");
+    console_prompt();
 }
 
 static void cmd_led(int argc, char *argv[]) {
 	if (argc < 2) {
 		console_write("usage: led off|slow|fast\r\n");
+		console_prompt();
 		return;
 	}
 
@@ -194,7 +278,6 @@ static void cmd_help(int argc, char *argv[]) {
 
 	for (size_t i = 0; i < CMD_COUNT; i++) {
 		console_write(cmd_table[i].name);
-		console_write(" - ");
 		console_write(cmd_table[i].help);
 		console_write("\r\n");
 	}

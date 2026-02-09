@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := step_6_adc_dma_data_acquisition
+BUILD_ARTIFACT_NAME := adc_dma_data_acquisition
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-step_6_adc_dma_data_acquisition.elf \
+adc_dma_data_acquisition.elf \
 
 MAP_FILES += \
-step_6_adc_dma_data_acquisition.map \
+adc_dma_data_acquisition.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-step_6_adc_dma_data_acquisition.list \
+adc_dma_data_acquisition.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: step_6_adc_dma_data_acquisition.elf secondary-outputs
+main-build: adc_dma_data_acquisition.elf secondary-outputs
 
 # Tool invocations
-step_6_adc_dma_data_acquisition.elf step_6_adc_dma_data_acquisition.map: $(OBJS) $(USER_OBJS) C:\Users\matkins\STM32CubeIDE\workspace_1.18.1\step_6_adc_dma_data_acquisition\STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "step_6_adc_dma_data_acquisition.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\matkins\STM32CubeIDE\workspace_1.18.1\step_6_adc_dma_data_acquisition\STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="step_6_adc_dma_data_acquisition.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+adc_dma_data_acquisition.elf adc_dma_data_acquisition.map: $(OBJS) $(USER_OBJS) C:\Users\matkins\STM32CubeIDE\workspace_1.18.1\step_6_adc_dma_data_acquisition\STM32F411RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "adc_dma_data_acquisition.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\matkins\STM32CubeIDE\workspace_1.18.1\step_6_adc_dma_data_acquisition\STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="adc_dma_data_acquisition.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-step_6_adc_dma_data_acquisition.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "step_6_adc_dma_data_acquisition.list"
+adc_dma_data_acquisition.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "adc_dma_data_acquisition.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout step_6_adc_dma_data_acquisition.elf step_6_adc_dma_data_acquisition.list step_6_adc_dma_data_acquisition.map
+	-$(RM) adc_dma_data_acquisition.elf adc_dma_data_acquisition.list adc_dma_data_acquisition.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

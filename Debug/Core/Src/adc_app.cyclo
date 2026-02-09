@@ -1,0 +1,10 @@
+../Core/Src/adc_app.c:15:6:adc_app_init	1
+../Core/Src/adc_app.c:20:6:adc_app_start	2
+../Core/Src/adc_app.c:34:6:adc_app_stop	2
+../Core/Src/adc_app.c:43:10:adc_app_latest	3
+../Core/Src/adc_app.c:58:10:adc_app_average	3
+../Core/Src/adc_app.c:71:10:adc_read_once	1
+../Core/Src/adc_app.c:80:10:adc_read_avg	2
+../Core/Src/adc_app.c:89:10:adc_to_voltage	1
+../Core/Src/adc_app.c:94:7:adc_to_ntc_resistance	3
+../Core/Src/adc_app.c:104:7:thermistor_beta_to_celsius	3
