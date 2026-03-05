@@ -431,7 +431,7 @@ Do **not** auto-start it — make it console-controlled
 
 ## Step 1 — Decide conversion method
 
-Our sensor is a 2-wire analog sensor between GND and 3.3 V
+I'm using an NTC thermistor in a pull-up resistor divider between GND and 3.3 V
 
 ## Step 2 — Add conversion function
 
